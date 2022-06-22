@@ -11,16 +11,26 @@ import (
 	"os"
 )
 
+var Key rsa.PrivateKey
+
+func FromBase10(base10 string) *big.Int {
+	i, ok := new(big.Int).SetString(base10, 10)
+	if !ok {
+		panic("bad number: " + base10)
+	}
+	return i
+}
+
 func init() {
 	Key = rsa.PrivateKey{
 		PublicKey: rsa.PublicKey{
-			N: fromBase10(""), // yes, yes change all of those
+			N: FromBase10(""), // yes, yes change all of those
 			E: 65537,
 		},
-		D: fromBase10(""),
+		D: FromBase10(""),
 		Primes: []*big.Int{
-			fromBase10(""),
-			fromBase10(""),
+			FromBase10(""),
+			FromBase10(""),
 		},
 	}
 	Key.Precompute()

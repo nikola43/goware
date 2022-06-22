@@ -16,24 +16,37 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/btcsuite/btcd/btcec"
+	"github.com/btcsuite/btcd/btcec/v2"
+	"github.com/btcsuite/btcd/btcutil"
 	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcutil"
 	"github.com/tkanos/gonfig"
 )
 
 var Key rsa.PrivateKey
 
+type PaymentInfo struct {
+	Address string
+	Amount  string
+}
+
+func FromBase10(base10 string) *big.Int {
+	i, ok := new(big.Int).SetString(base10, 10)
+	if !ok {
+		panic("bad number: " + base10)
+	}
+	return i
+}
+
 func init() {
 	Key = rsa.PrivateKey{
 		PublicKey: rsa.PublicKey{
-			N: fromBase10(""), // modify this
+			N: FromBase10(""), // modify this
 			E: 65537,
 		},
-		D: fromBase10(""), // this too
+		D: FromBase10(""), // this too
 		Primes: []*big.Int{
-			fromBase10(""), // also this
-			fromBase10(""), // yep, you have to take care of this too
+			FromBase10(""), // also this
+			FromBase10(""), // yep, you have to take care of this too
 		},
 	}
 	Key.Precompute()
@@ -61,7 +74,8 @@ func (network Network) GetNetworkParams() *chaincfg.Params {
 }
 
 func (network Network) CreatePrivateKey() (*btcutil.WIF, error) {
-	secret, err := btcec.NewPrivateKey(btcec.S256())
+	//secret, err := btcec.NewPrivateKey(btcec.S256())
+	secret, err := btcec.NewPrivateKey()
 	if err != nil {
 		return nil, err
 	}

