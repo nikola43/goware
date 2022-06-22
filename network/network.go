@@ -15,7 +15,7 @@ type Network struct {
 	xprivatekey byte
 }
 
-var networks = map[string]Network{
+var Networks = map[string]Network{
 	"rdd": {name: "reddcoin", symbol: "rdd", xpubkey: 0x3d, xprivatekey: 0xbd},
 	"dgb": {name: "digibyte", symbol: "dgb", xpubkey: 0x1e, xprivatekey: 0x80},
 	"btc": {name: "bitcoin", symbol: "btc", xpubkey: 0x00, xprivatekey: 0x80},

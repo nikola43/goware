@@ -9,7 +9,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"goware/utils"
 	"io"
 	"io/ioutil"
 	"log"
@@ -19,6 +18,8 @@ import (
 	"path/filepath"
 	"runtime"
 	"time"
+
+	"github.com/nikola43/goware/utils"
 
 	"github.com/denisbrodbeck/machineid"
 )
