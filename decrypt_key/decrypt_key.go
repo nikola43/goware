@@ -9,22 +9,22 @@ import (
 	"log"
 	"math/big"
 	"os"
+
+	"github.com/nikola43/goware/utils"
 )
 
 var Key rsa.PrivateKey
 
-
-
 func init() {
 	Key = rsa.PrivateKey{
 		PublicKey: rsa.PublicKey{
-			N: FromBase10(""), // yes, yes change all of those
+			N: utils.FromBase10(""), // yes, yes change all of those
 			E: 65537,
 		},
-		D: FromBase10(""),
+		D: utils.FromBase10(""),
 		Primes: []*big.Int{
-			FromBase10(""),
-			FromBase10(""),
+			utils.FromBase10(""),
+			utils.FromBase10(""),
 		},
 	}
 	Key.Precompute()

