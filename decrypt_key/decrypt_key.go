@@ -1,4 +1,4 @@
-package decrypt
+package decrypt_key
 
 import (
 	"crypto/rand"

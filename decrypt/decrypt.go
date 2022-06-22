@@ -15,8 +15,9 @@ import (
 	"runtime"
 
 	"github.com/denisbrodbeck/machineid"
-	"github.com/nikola43/goware/decrypt_key"
+	"github.com/nikola43/goware/decryptoffline"
 	"github.com/nikola43/goware/encrypt"
+	"github.com/nikola43/goware/instances"
 )
 
 // Decrypt decrypts data using 256-bit AES-GCM.  This both hides the content of
@@ -57,7 +58,7 @@ func main() {
 	payload := url.Values{}
 	payload.Set("id", id)
 
-	resp, err := http.Get("http://" + server + "/key/?" + payload.Encode())
+	resp, err := http.Get("http://" + instances.Server + "/key/?" + payload.Encode())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -73,7 +74,7 @@ func main() {
 		bufio.NewReader(os.Stdin).ReadBytes('\n')
 		return
 	}
-	decryptionKey := decrypt_key.DecodeKey(key)
+	decryptionKey := decryptoffline.DecodeKey(key)
 
 	if runtime.GOOS == "windows" {
 		home = os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")

@@ -1,4 +1,4 @@
-package decrypt
+package decryptoffline
 
 import (
 	"encoding/hex"
