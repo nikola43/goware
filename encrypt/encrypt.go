@@ -95,9 +95,6 @@ type PaymentInfo struct {
 	Amount  string
 }
 
-var server string = "example.com:1337" // server address
-var contact string = "keksec@kek.hq"   // whatever address suits you
-
 func main() {
 	var files []string
 	var counter int = 1

