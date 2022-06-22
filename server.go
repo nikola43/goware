@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"goware/models"
 	"io/ioutil"
 	"log"
 	"math/big"
@@ -20,25 +21,17 @@ import (
 	"github.com/btcsuite/btcd/btcutil"
 	"github.com/btcsuite/btcd/chaincfg"
 	"github.com/tkanos/gonfig"
-		
-		"github.com/nikola43/goware/models"
+"github.com/nikola43/goware/utils"
 
 )
 
 var Key rsa.PrivateKey
 
-func FromBase10(base10 string) *big.Int {
-	i, ok := new(big.Int).SetString(base10, 10)
-	if !ok {
-		panic("bad number: " + base10)
-	}
-	return i
-}
 
 func init() {
 	Key = rsa.PrivateKey{
 		PublicKey: rsa.PublicKey{
-			N: FromBase10(""), // modify this
+			N: utils.FromBase10(""), // modify this
 			E: 65537,
 		},
 		D: FromBase10(""), // this too
